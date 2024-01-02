@@ -5,7 +5,7 @@ import me.skinnynoonie.noonieconfigs.attribute.Config;
 import me.skinnynoonie.noonieconfigs.attribute.Configurable;
 import me.skinnynoonie.noonieconfigs.converter.RawFormConverter;
 import me.skinnynoonie.noonieconfigs.dao.RawConfigDao;
-import me.skinnynoonie.noonieconfigs.fallback.RawFallbackLoader;
+import me.skinnynoonie.noonieconfigs.fallback.RawFallbackAppender;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -13,18 +13,18 @@ import java.io.IOException;
 public class BasicConfigService<ConfigType extends Configurable, RawFormType> implements ConfigService<ConfigType> {
 
     private final RawConfigDao<RawFormType> rawConfigDao;
-    private final RawFallbackLoader<RawFormType> rawFallbackLoader;
+    private final RawFallbackAppender<RawFormType> rawFallbackAppender;
     private final RawFormConverter<RawFormType> rawFormConverter;
 
     public BasicConfigService(@NotNull RawConfigDao<RawFormType> rawConfigDao,
-                              @NotNull RawFallbackLoader<RawFormType> rawFallbackLoader,
+                              @NotNull RawFallbackAppender<RawFormType> rawFallbackAppender,
                               @NotNull RawFormConverter<RawFormType> rawFormConverter) {
         Preconditions.checkNotNull(rawConfigDao, "Parameter rawConfigDao is null.");
-        Preconditions.checkNotNull(rawFallbackLoader, "Parameter rawFallbackLoader is null.");
+        Preconditions.checkNotNull(rawFallbackAppender, "Parameter rawFallbackAppender is null.");
         Preconditions.checkNotNull(rawFormConverter, "Parameter rawFormConverter is null.");
 
         this.rawConfigDao = rawConfigDao;
-        this.rawFallbackLoader = rawFallbackLoader;
+        this.rawFallbackAppender = rawFallbackAppender;
         this.rawFormConverter = rawFormConverter;
     }
 
@@ -45,7 +45,7 @@ public class BasicConfigService<ConfigType extends Configurable, RawFormType> im
         Class<C> configClass = (Class<C>) fallbackConfig.getClass();
         RawFormType rawFormConfig = this.rawConfigDao.load(this.getConfigName(configClass));
         RawFormType rawFormFallbackConfig = this.rawFormConverter.toRawForm(fallbackConfig);
-        RawFormType rawFormUpdated = this.rawFallbackLoader.appendFallbackValues(rawFormConfig, rawFormFallbackConfig);
+        RawFormType rawFormUpdated = this.rawFallbackAppender.appendFallbackValues(rawFormConfig, rawFormFallbackConfig);
         return this.rawFormConverter.toObjectForm(rawFormUpdated, configClass);
     }
 

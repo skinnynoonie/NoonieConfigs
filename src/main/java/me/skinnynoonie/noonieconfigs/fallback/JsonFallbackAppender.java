@@ -3,7 +3,7 @@ package me.skinnynoonie.noonieconfigs.fallback;
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
 
-public class RawJsonFallbackLoader implements RawFallbackLoader<JsonObject> {
+public class JsonFallbackAppender implements RawFallbackAppender<JsonObject> {
 
     @Override
     public @NotNull JsonObject appendFallbackValues(@NotNull JsonObject original, @NotNull JsonObject fallback) {
