@@ -3,7 +3,6 @@ package me.skinnynoonie.noonieconfigs.dao;
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
@@ -19,7 +18,7 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-public class JsonFileConfigRepository implements RawConfigRepository<JsonObject> {
+public final class JsonFileConfigRepository implements RawConfigRepository<JsonObject> {
 
     @NotNull
     public static JsonFileConfigRepository newInstance(@NotNull Path configFolder, @NotNull Gson gson) {

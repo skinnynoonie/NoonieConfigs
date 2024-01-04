@@ -1,23 +1,25 @@
 package me.skinnynoonie.noonieconfigs.fallback;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import org.jetbrains.annotations.NotNull;
 
-public class JsonFallbackValueProvider implements FallbackValueProvider<JsonObject> {
+public final class JsonFallbackValueProvider implements FallbackValueProvider<JsonObject> {
 
+    @NotNull
     @Override
-    public @NotNull JsonObject appendFallbackValues(@NotNull JsonObject original, @NotNull JsonObject fallback) {
+    public JsonObject appendFallbackValues(@NotNull JsonObject original, @NotNull JsonObject fallback) {
+        Preconditions.checkNotNull(original, "Parameter original is null.");
+        Preconditions.checkNotNull(fallback, "Parameter fallback is null.");
+
         this.recursiveValueReplacement(original, fallback);
         return original;
     }
 
     private void recursiveValueReplacement(JsonObject original, JsonObject fallback) {
-        System.out.println("hiasdfsdaffsda");
         for (String key : fallback.keySet()) {
-
-            System.out.println(key);
 
             if (!original.has(key)) {
                 original.add(key, fallback.get(key));
@@ -38,7 +40,6 @@ public class JsonFallbackValueProvider implements FallbackValueProvider<JsonObje
                 continue;
             }
 
-            System.out.println(key);
             if (!this.isSameType(originalValue, fallbackValue)) {
                 original.add(key, fallback.get(key));
                 continue;

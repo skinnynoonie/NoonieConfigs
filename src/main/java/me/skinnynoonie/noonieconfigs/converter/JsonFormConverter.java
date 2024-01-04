@@ -8,7 +8,7 @@ import com.google.gson.JsonSyntaxException;
 import me.skinnynoonie.noonieconfigs.exception.MalformedBodyException;
 import org.jetbrains.annotations.NotNull;
 
-public class JsonFormConverter implements RawFormConverter<JsonObject> {
+public final class JsonFormConverter implements RawFormConverter<JsonObject> {
 
     private final Gson gson;
 

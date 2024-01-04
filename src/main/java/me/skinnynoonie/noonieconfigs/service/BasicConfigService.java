@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-public class BasicConfigService<ConfigType, RawFormType> implements ConfigService<ConfigType> {
+public final class BasicConfigService<ConfigType, RawFormType> implements ConfigService<ConfigType> {
 
     private final RawConfigRepository<RawFormType> rawConfigRepository;
     private final FallbackValueProvider<RawFormType> fallbackValueProvider;
@@ -42,6 +42,7 @@ public class BasicConfigService<ConfigType, RawFormType> implements ConfigServic
     }
 
     @NotNull
+    @SuppressWarnings("unchecked")
     @Override
     public <C extends ConfigType> C loadWithFallback(@NotNull C fallbackConfig) throws IOException {
         Preconditions.checkNotNull(fallbackConfig, "Parameter configClass is null.");
@@ -72,6 +73,7 @@ public class BasicConfigService<ConfigType, RawFormType> implements ConfigServic
                 configClass.isAnnotationPresent(Config.class),
                 "Class %s is not annotated with Config.".formatted(configClass.getName())
         );
+
         return configClass.getAnnotation(Config.class).name();
     }
 
