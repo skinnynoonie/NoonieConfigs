@@ -5,8 +5,8 @@ It does this by using concrete classes to represent configuration files.
 NoonieConfigs also uses a unique system, which helps the user set and update to valid values.
 
 NoonieConfigs offers:
-1. Automatic updates for configs.
-2. Automatic fallback value replacement.
+1. Automatic updates for configs. (If a configuration class is updated, the configuration saved in the storage will also update.)
+2. Automatic fallback value replacement. (If a configuration was loaded, and the values are illegal, fallback values can replace those illegal values.)
 
 
 # Set Up
