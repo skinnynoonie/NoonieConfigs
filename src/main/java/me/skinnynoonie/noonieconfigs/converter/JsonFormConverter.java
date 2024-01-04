@@ -2,8 +2,8 @@ package me.skinnynoonie.noonieconfigs.converter;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import me.skinnynoonie.noonieconfigs.exception.MalformedBodyException;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +13,7 @@ public class JsonFormConverter implements RawFormConverter<JsonObject> {
     private final Gson gson;
 
     public JsonFormConverter() {
-        this.gson = new Gson();
+        this.gson = new GsonBuilder().serializeNulls().create();
     }
 
     @Override

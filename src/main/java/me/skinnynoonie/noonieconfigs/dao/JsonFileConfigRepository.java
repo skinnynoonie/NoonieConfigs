@@ -5,6 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import me.skinnynoonie.noonieconfigs.exception.MalformedBodyException;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,35 +14,37 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
-public class JsonFileConfigDao implements RawConfigDao<JsonObject> {
+public class JsonFileConfigRepository implements RawConfigRepository<JsonObject> {
 
     @NotNull
-    public static JsonFileConfigDao newInstance(@NotNull Path configFolder, @NotNull Gson gson) {
-        return new JsonFileConfigDao(configFolder, gson);
+    public static JsonFileConfigRepository newInstance(@NotNull Path configFolder, @NotNull Gson gson) {
+        return new JsonFileConfigRepository(configFolder, gson);
     }
 
     @NotNull
-    public static JsonFileConfigDao withTypeAdapters(@NotNull Path configFolder, @NotNull Map<Type, Object> typeAdapters) {
+    public static JsonFileConfigRepository withTypeAdapters(@NotNull Path configFolder, @NotNull Map<Type, Object> typeAdapters) {
         Preconditions.checkNotNull(typeAdapters, "Parameter typeAdapters is null.");
 
         GsonBuilder gsonBuilder = new GsonBuilder().serializeNulls().disableHtmlEscaping().setPrettyPrinting();
         typeAdapters.forEach(gsonBuilder::registerTypeAdapter);
-        return new JsonFileConfigDao(configFolder, gsonBuilder.create());
+        return new JsonFileConfigRepository(configFolder, gsonBuilder.create());
     }
 
     @NotNull
-    public static JsonFileConfigDao createDefault(@NotNull Path configFolder) {
+    public static JsonFileConfigRepository createDefault(@NotNull Path configFolder) {
         Gson gson = new GsonBuilder().serializeNulls().disableHtmlEscaping().setPrettyPrinting().create();
-        return new JsonFileConfigDao(configFolder, gson);
+        return new JsonFileConfigRepository(configFolder, gson);
     }
 
     private final Path configFolder;
     private final Gson gson;
 
-    private JsonFileConfigDao(@NotNull Path configFolder, @NotNull Gson gson) {
+    private JsonFileConfigRepository(@NotNull Path configFolder, @NotNull Gson gson) {
         Preconditions.checkNotNull(configFolder, "Parameter configFolder is null.");
         Preconditions.checkNotNull(gson, "Parameter gson is null.");
 
@@ -49,7 +53,7 @@ public class JsonFileConfigDao implements RawConfigDao<JsonObject> {
     }
 
     @Override
-    public void initiate() throws IOException {
+    public void initialize() throws IOException {
         Files.createDirectories(this.configFolder);
     }
 
@@ -58,11 +62,16 @@ public class JsonFileConfigDao implements RawConfigDao<JsonObject> {
     public JsonObject load(@NotNull String configName) throws IOException {
         Preconditions.checkNotNull(configName, "Parameter configName is null.");
 
+        if (!this.isSaved(configName)) {
+            throw new NoSuchElementException("Config named %s does not exist and thus cannot be loaded."
+                    .formatted(configName));
+        }
+
         Path pathToConfig = this.configFolder.resolve(configName + ".json");
         String configContent = Files.readString(pathToConfig);
         try {
-            return this.gson.toJsonTree(configContent).getAsJsonObject();
-        } catch (JsonIOException exception) {
+            return JsonParser.parseString(configContent).getAsJsonObject();
+        } catch (JsonParseException exception) {
             throw new MalformedBodyException(
                     "Error while converting file %s to a JsonObject. Content: %s"
                             .formatted(pathToConfig.toString(), configContent),
@@ -84,7 +93,12 @@ public class JsonFileConfigDao implements RawConfigDao<JsonObject> {
 
     @Override
     public boolean isSaved(@NotNull String configName) throws IOException {
-        return Files.exists(this.configFolder.resolve(configName + ".json"));
+        try {
+            return Files.exists(this.configFolder.resolve(configName + ".json"));
+        } catch (InvalidPathException exception) {
+            exception.printStackTrace();
+            return false;
+        }
     }
 
     @NotNull

@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Classes that are configurable (implements {@link Configurable}) must also be annotated with this.
+ * Classes that are configurable must also be annotated with this.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

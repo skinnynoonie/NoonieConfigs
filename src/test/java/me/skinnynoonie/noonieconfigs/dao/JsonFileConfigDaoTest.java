@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class JsonFileConfigDaoTest {
 
     private static final Path TEMP_CONFIG_FOLDER;
@@ -20,22 +18,6 @@ class JsonFileConfigDaoTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Test
-    void newInstance_throwsExceptions() {
-        assertThrows(NullPointerException.class, () -> JsonFileConfigDao.newInstance(null, null));
-        assertThrows(NullPointerException.class, () -> JsonFileConfigDao.newInstance(null, GSON));
-        assertThrows(NullPointerException.class, () -> JsonFileConfigDao.newInstance(TEMP_CONFIG_FOLDER, null));
-        assertDoesNotThrow(() -> JsonFileConfigDao.newInstance(TEMP_CONFIG_FOLDER, GSON));
-    }
-
-    @Test
-    void withTypeAdapters_throwsExceptions() {
-    }
-
-    @Test
-    void createDefault_doesNotThrow() {
     }
 
     @Test

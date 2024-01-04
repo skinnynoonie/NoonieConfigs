@@ -4,9 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-public interface RawConfigDao<T> {
+public interface RawConfigRepository<T> {
 
-    void initiate() throws IOException;
+    void initialize() throws IOException;
 
     @NotNull T load(@NotNull String configName) throws IOException;
 
