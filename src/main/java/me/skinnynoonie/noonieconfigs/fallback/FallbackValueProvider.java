@@ -2,6 +2,10 @@ package me.skinnynoonie.noonieconfigs.fallback;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This interface will replace any missing or invalid values via fallback.
+ * @param <T> The raw data type this fallback value provider will wrap.
+ */
 public interface FallbackValueProvider<T> {
 
     /**

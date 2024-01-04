@@ -4,6 +4,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
+/**
+ * This interface is a service that handles the configurations by concrete classes.
+ * @param <T> The element type that this service will handle.
+ */
 public interface ConfigService<T> {
 
     /**

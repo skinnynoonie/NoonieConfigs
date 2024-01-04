@@ -4,6 +4,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
+/**
+ * This is interface holds the basic interactions with the non-volatile storage.
+ * @param <T> The raw data type this repository will wrap.
+ */
 public interface RawConfigRepository<T> {
 
     /**
