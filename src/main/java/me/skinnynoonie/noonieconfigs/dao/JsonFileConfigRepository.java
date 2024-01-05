@@ -11,11 +11,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 public final class JsonFileConfigRepository implements RawConfigRepository<JsonObject> {
@@ -23,15 +21,6 @@ public final class JsonFileConfigRepository implements RawConfigRepository<JsonO
     @NotNull
     public static JsonFileConfigRepository newInstance(@NotNull Path configFolder, @NotNull Gson gson) {
         return new JsonFileConfigRepository(configFolder, gson);
-    }
-
-    @NotNull
-    public static JsonFileConfigRepository withTypeAdapters(@NotNull Path configFolder, @NotNull Map<Type, Object> typeAdapters) {
-        Preconditions.checkNotNull(typeAdapters, "Parameter typeAdapters is null.");
-
-        GsonBuilder gsonBuilder = new GsonBuilder().serializeNulls().disableHtmlEscaping().setPrettyPrinting();
-        typeAdapters.forEach(gsonBuilder::registerTypeAdapter);
-        return new JsonFileConfigRepository(configFolder, gsonBuilder.create());
     }
 
     @NotNull

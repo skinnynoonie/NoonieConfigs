@@ -2,9 +2,8 @@ package me.skinnynoonie.noonieconfigs.converter;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.JsonParseException;
 import me.skinnynoonie.noonieconfigs.exception.MalformedBodyException;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,8 +11,10 @@ public final class JsonFormConverter implements RawFormConverter<JsonObject> {
 
     private final Gson gson;
 
-    public JsonFormConverter() {
-        this.gson = new GsonBuilder().serializeNulls().create();
+    public JsonFormConverter(@NotNull Gson gson) {
+        Preconditions.checkNotNull(gson, "Parameter gson is null.");
+
+        this.gson = gson;
     }
 
     @Override
@@ -30,7 +31,7 @@ public final class JsonFormConverter implements RawFormConverter<JsonObject> {
 
         try {
             return this.gson.fromJson(rawFormData, type);
-        } catch (JsonSyntaxException exception) {
+        } catch (JsonParseException exception) {
             throw new MalformedBodyException(
                     "Class %s cannot be represented using the following JSON object: %s"
                             .formatted(type.getName(), rawFormData.toString()),

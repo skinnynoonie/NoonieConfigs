@@ -1,5 +1,7 @@
 package me.skinnynoonie.noonieconfigs;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import me.skinnynoonie.noonieconfigs.converter.JsonFormConverter;
 import me.skinnynoonie.noonieconfigs.dao.JsonFileConfigRepository;
@@ -14,10 +16,11 @@ public final class DefaultConfigServices {
 
     @NotNull
     public static <T> ConfigService<T> createJsonConfigService(@NotNull Path configFolderPath) {
+        Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
         return new BasicConfigService<T, JsonObject>(
-                JsonFileConfigRepository.createDefault(configFolderPath),
+                JsonFileConfigRepository.newInstance(configFolderPath, gson),
                 new JsonFallbackValueProvider(),
-                new JsonFormConverter()
+                new JsonFormConverter(gson)
         );
     }
 
