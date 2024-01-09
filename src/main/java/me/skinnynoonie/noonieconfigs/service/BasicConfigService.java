@@ -71,7 +71,7 @@ public final class BasicConfigService<ConfigType, RawFormType> implements Config
     private String validateAndGetConfigName(Class<?> configClass) {
         Preconditions.checkState(
                 configClass.isAnnotationPresent(Config.class),
-                "Class %s is not annotated with Config.".formatted(configClass.getName())
+                "Class " + configClass.getName() + " is not annotated with @Config."
         );
 
         return configClass.getAnnotation(Config.class).name();

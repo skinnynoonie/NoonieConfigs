@@ -51,18 +51,16 @@ public final class JsonFileConfigRepository implements RawConfigRepository<JsonO
         Preconditions.checkNotNull(configName, "Parameter configName is null.");
 
         if (!this.isSaved(configName)) {
-            throw new NoSuchElementException("Config named %s does not exist and thus cannot be loaded."
-                    .formatted(configName));
+            throw new NoSuchElementException("Config named " + configName + " does not exist and thus cannot be loaded.");
         }
 
         Path pathToConfig = this.configFolder.resolve(configName + ".json");
-        String configContent = Files.readString(pathToConfig);
+        String configContent = new String(Files.readAllBytes(pathToConfig));
         try {
             return JsonParser.parseString(configContent).getAsJsonObject();
         } catch (JsonParseException exception) {
             throw new MalformedBodyException(
-                    "Error while converting file %s to a JsonObject. Content: %s"
-                            .formatted(pathToConfig.toString(), configContent),
+                    "Error while converting file " + pathToConfig + " to a JsonObject. Content: " + configContent,
                     exception
             );
         }

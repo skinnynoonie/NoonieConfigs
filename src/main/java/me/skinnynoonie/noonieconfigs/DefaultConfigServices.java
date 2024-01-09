@@ -20,7 +20,7 @@ public final class DefaultConfigServices {
         return new BasicConfigService<T, JsonObject>(
                 JsonFileConfigRepository.newInstance(configFolderPath, gson),
                 new JsonFallbackValueProvider(),
-                new JsonFormConverter(gson)
+                JsonFormConverter.newInstance(gson)
         );
     }
 

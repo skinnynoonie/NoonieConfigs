@@ -53,8 +53,7 @@ public final class JsonFormConverter implements RawFormConverter<JsonObject> {
             return this.gson.fromJson(rawFormData, type);
         } catch (JsonParseException exception) {
             throw new MalformedBodyException(
-                    "Class %s cannot be represented using the following JSON object: %s"
-                            .formatted(type.getName(), rawFormData.toString()),
+                    "Class " + type.getName() + " cannot be represented using the following JSON object: " + rawFormData,
                     exception
             );
         }
